@@ -3,13 +3,19 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import db.DbException;
+import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Department;
+import model.services.DepartmentService;
 
 /*
  * Classe para realizar o controle:
@@ -24,6 +30,9 @@ public class DepartmentFormController implements Initializable{
 
 	// dependencia para o departamento (entidade relacionada a esse formulario)
 	private Department entity;
+	
+	// dependencia para o departamentoService
+	private DepartmentService service;
 	
 	@FXML
 	private TextField txtId;
@@ -42,20 +51,61 @@ public class DepartmentFormController implements Initializable{
 	private Button btnCancel;
 	
 	@FXML
-	private void onBtSaveAction() {
+	private void onBtSaveAction(ActionEvent event) {
 		
-		System.out.println("onBtSaveAction");
+		// Adicionado os dois if´s para indicar para o programador que nao foi injetado ou entity ou service. Isso precisa porque a injeção de dependencia está sendo feito de forma manual
+		if (entity == null) {
+			throw new IllegalStateException("Entity was null");
+		}
+		
+		if (service == null) {
+			throw new IllegalStateException("Service was null");
+		}
+		
+		try {
+			// getFormData - responsavel por pegar os dados na caixa de text name e instanciar um departamento
+			entity = getFormData();
+			
+			service.saveOrUpdate(entity);
+			
+			// para fechar a janela apos apertar o botao save
+			Utils.currentStage(event).close();
+			
+			System.out.println("onBtSaveAction");	
+		} catch (DbException e) {
+			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
+		}
+		
+		
+
 	}
 	
-	@FXML
-	private void onBtCancelAction() {
-		System.out.println("onBtCancelAction");
+	private Department getFormData() {
+		
+		Department obj = new Department();
+		
+		// a função utils.tryParseToInt vai converter o texto que esta na caixa ID para inteiro
+		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
+		obj.setName(txtName.getText());
+		
+		return obj;
+	}
 
+	@FXML
+	private void onBtCancelAction(ActionEvent event) {	
+		// para fechar a janela apos apertar o botao save
+		Utils.currentStage(event).close();
+		System.out.println("onBtCancelAction");
 	}	
 	
 	public void setDepartment(Department entity) {
 		
 		this.entity = entity;
+	}
+	
+	public void setDepartmentService(DepartmentService service) {
+		this.service = service;
 	}
 	
 	@Override

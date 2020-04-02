@@ -111,6 +111,7 @@ public class DepartmentListController implements Initializable{
 			// aula 276 ()
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormData();
 			
 			

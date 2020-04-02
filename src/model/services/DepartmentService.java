@@ -14,6 +14,15 @@ public class DepartmentService {
 		return dao.findAll();
 	}
 	
+	public void saveOrUpdate(Department obj) {
+		if (obj.getId() == null) {
+			dao.insert(obj);
+		} 
+		else {
+			dao.update(obj);
+		}
+	}
+	
 	/*
 	// Antes de testar no banco de dados vamos MOCAR ou seja testar a funcionalidade
 	public List<Department> findAll(){
