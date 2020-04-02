@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.entities.Department;
 
 /*
  * Classe para realizar o controle:
@@ -21,6 +22,9 @@ import javafx.scene.control.TextField;
 
 public class DepartmentFormController implements Initializable{
 
+	// dependencia para o departamento (entidade relacionada a esse formulario)
+	private Department entity;
+	
 	@FXML
 	private TextField txtId;
 	
@@ -49,6 +53,11 @@ public class DepartmentFormController implements Initializable{
 
 	}	
 	
+	public void setDepartment(Department entity) {
+		
+		this.entity = entity;
+	}
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
@@ -61,5 +70,20 @@ public class DepartmentFormController implements Initializable{
 		Constraints.setTextFieldInteger(txtId);
 		// limita para a caixa de texto textName somente no máximo 30 caracteres
 		Constraints.setTextFieldMaxLength(txtName, 30);
+	}
+	
+	// Esse metodo fica responsavel para popular as caixas de texto ID e Name (Isso para update da informação)
+	public void updateFormData() {
+		
+		// para checar se o entity está valendo nulo (programação defensiva - caso programador tenha esquecido de injetar info)
+		if (entity == null) {
+			throw new IllegalStateException("Entity was null");
+		}
+		
+		// para converter o id da entidade (que é inteiro) para string
+		txtId.setText(String.valueOf(entity.getId()));
+		
+		txtName.setText(entity.getName());
+	
 	}
 }

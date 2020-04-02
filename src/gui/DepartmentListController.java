@@ -53,8 +53,12 @@ public class DepartmentListController implements Initializable{
 	public void onBtNewAction(ActionEvent event) {
 		
 		Stage parentStage = Utils.currentStage(event);
+		
+		// para iniciar vazio
+		Department obj = new Department();
+		
 		// chamada da função createDialogForm para o botão New
-		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
 		
 		System.out.println("onBtNewAction");
 	}
@@ -98,11 +102,17 @@ public class DepartmentListController implements Initializable{
 	
 	//Para instaciar a janela de dialogo
 	// a função createDialogForm será chamada no botao NEW (onBtNewAction)
-	private void createDialogForm(String absoluteName, Stage parentStage) {
+	private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			// para carregar a view
 			Pane pane = loader.load();
+			
+			// aula 276 ()
+			DepartmentFormController controller = loader.getController();
+			controller.setDepartment(obj);
+			controller.updateFormData();
+			
 			
 			// quando carrega uma janela modal na frente da janela principal necessário estanciar um novo stage
 			Stage dialogStage = new Stage();
