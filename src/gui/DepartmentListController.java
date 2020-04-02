@@ -1,18 +1,27 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.util.Alerts;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
@@ -41,7 +50,12 @@ public class DepartmentListController implements Initializable{
 	private ObservableList<Department> obsList;
 	
 	@FXML
-	public void onBtNewAction() {
+	public void onBtNewAction(ActionEvent event) {
+		
+		Stage parentStage = Utils.currentStage(event);
+		// chamada da função createDialogForm para o botão New
+		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		
 		System.out.println("onBtNewAction");
 	}
 	
@@ -80,5 +94,32 @@ public class DepartmentListController implements Initializable{
 		obsList = FXCollections.observableArrayList(list);
 		// para carregar na tela do departmentlist.fxml
 		tableViewDepartments.setItems(obsList);
+	}
+	
+	//Para instaciar a janela de dialogo
+	// a função createDialogForm será chamada no botao NEW (onBtNewAction)
+	private void createDialogForm(String absoluteName, Stage parentStage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			// para carregar a view
+			Pane pane = loader.load();
+			
+			// quando carrega uma janela modal na frente da janela principal necessário estanciar um novo stage
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Enter Department data");
+			// criar uma nova cena
+			dialogStage.setScene(new Scene(pane));
+			// item abaixo diz se a tela pode ou nao ser redimensionada (no caso não pode ser redimensionada)
+			dialogStage.setResizable(false);
+			// quem o pai da janela
+			dialogStage.initOwner(parentStage);
+			// vai dizer se a janela será modal ou terá um outro comportamento (NO caso será modal, ou seja, ela ficará travada. Enquanto não fechar a janela não pode acessar a janela anterior)
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			
+			dialogStage.showAndWait();
+			
+		} catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error Loading View", e.getMessage(), AlertType.ERROR);
+		}
 	}
 }
