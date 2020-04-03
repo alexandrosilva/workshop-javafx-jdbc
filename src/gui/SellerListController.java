@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -43,7 +44,19 @@ public class SellerListController implements Initializable, DataChangeListener {
 	// tratando coluna Name da tela SellerList
 	@FXML
 	private TableColumn<Seller, String> tableColumName;
+	
+	// tratando coluna Email da tela SellerList
+	@FXML
+	private TableColumn<Seller, String> tableColumEmail;
 
+	// tratando coluna Data da tela SellerList
+	@FXML
+	private TableColumn<Seller, Date> tableColumBirthDate;
+	
+	// tratando coluna Salary da tela SellerList
+	@FXML
+	private TableColumn<Seller, Double> tableColumBaseSalary;
+	
 	@FXML
 	private TableColumn<Seller, Seller> tableColumnEDIT;
 
@@ -89,6 +102,11 @@ public class SellerListController implements Initializable, DataChangeListener {
 		// iniciar o comportamento das tabelas
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tableColumEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tableColumBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		Utils.formatTableColumnDate(tableColumBirthDate, "dd/MM/yyyy");
+		tableColumBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+		Utils.formatTableColumnDouble(tableColumBaseSalary, 2);
 
 		// para a tableView ficar bem posicionada ate o fim da janela principal
 		Stage stage = (Stage) Main.getMainScene().getWindow();
