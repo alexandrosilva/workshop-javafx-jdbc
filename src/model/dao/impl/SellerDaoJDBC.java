@@ -163,7 +163,7 @@ PreparedStatement st = null;
 		// pega o salario da tebela seller
 		obj.setBaseSalary(rs.getDouble("BaseSalary"));
 		// pega a data da tabela seller
-		obj.setBirthDate(rs.getDate("BirthDate"));
+		obj.setBirthDate(new java.util.Date(rs.getTimestamp("BirthDate").getTime()));
 		// a associação do departamento
 		obj.setDepartment(dep);
 		

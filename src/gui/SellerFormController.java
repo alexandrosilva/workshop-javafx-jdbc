@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Seller;
@@ -49,9 +53,30 @@ public class SellerFormController implements Initializable{
 	@FXML
 	private TextField txtName;
 	
+	@FXML
+	private TextField txtEmail;
+	
+	@FXML
+	private DatePicker dpBirthDate;
+	
+	@FXML
+	private TextField txtBaseSalary;
+	
 	// para mensagem de erro caso ocorra erro no preenchimento do nome
 	@FXML
 	private Label labelErrorName;
+	
+	// para mensagem de erro caso ocorra erro no preenchimento do email
+	@FXML
+	private Label labelErrorEmail;
+	
+	// para mensagem de erro caso ocorra erro no preenchimento do data
+	@FXML
+	private Label labelErrorBirthDate;
+	
+	// para mensagem de erro caso ocorra erro no preenchimento do salario
+	@FXML
+	private Label labelErrorBaseSalary;
 	
 	@FXML
 	private Button btnSave;
@@ -149,8 +174,15 @@ public class SellerFormController implements Initializable{
 	private void initializeNodes() {
 		// limita para a caixa de texto textId somente numeros inteiros
 		Constraints.setTextFieldInteger(txtId);
-		// limita para a caixa de texto textName somente no máximo 30 caracteres
-		Constraints.setTextFieldMaxLength(txtName, 30);
+		// limita para a caixa de texto textName somente no máximo 70 caracteres
+		Constraints.setTextFieldMaxLength(txtName, 70);
+		// limita para a caixa de texto textEmail somente no máximo 60 caracteres
+		Constraints.setTextFieldMaxLength(txtEmail, 60);
+		// tratrar o formato da data na tela
+		Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
+		// limita para a caixa de texto textbaseSalary formata para numero double
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		
 	}
 	
 	// Esse metodo fica responsavel para popular as caixas de texto ID e Name (Isso para update da informação)
@@ -165,7 +197,16 @@ public class SellerFormController implements Initializable{
 		txtId.setText(String.valueOf(entity.getId()));
 		
 		txtName.setText(entity.getName());
-	
+		
+		txtEmail.setText(entity.getEmail());
+		
+		//(Aula 286)
+		if (entity.getBirthDate() != null) {
+			dpBirthDate.setValue(LocalDate.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()));	
+		}
+		
+		Locale.setDefault(Locale.US);
+		txtBaseSalary.setText(String.format("%.2f", entity.getBaseSalary()));
 	}
 	
 	private void setErrorMessages(Map<String, String> errors) {

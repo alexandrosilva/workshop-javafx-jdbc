@@ -103,13 +103,14 @@ public class SellerListController implements Initializable, DataChangeListener {
 
 	// apos inserir initializenodes no metodo initialize
 	private void initializeNodes() {
-
 		// iniciar o comportamento das tabelas
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		tableColumEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		
 		tableColumBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
 		Utils.formatTableColumnDate(tableColumBirthDate, "dd/MM/yyyy");
+		
 		tableColumBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
 		Utils.formatTableColumnDouble(tableColumBaseSalary, 2);
 
@@ -175,7 +176,6 @@ public class SellerListController implements Initializable, DataChangeListener {
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error Loading View", e.getMessage(), AlertType.ERROR);
 		}
-	
 	}
 
 
@@ -239,8 +239,6 @@ public class SellerListController implements Initializable, DataChangeListener {
 			} catch (DbIntegrityException e) {
 				Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
 			}
-		}
-		
+		}	
 	}
-
 }
