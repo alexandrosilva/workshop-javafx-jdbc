@@ -23,6 +23,10 @@ public class DepartmentService {
 		}
 	}
 	
+	public void remove(Department obj) {
+		dao.deleteById(obj.getId());
+	}
+	
 	/*
 	// Antes de testar no banco de dados vamos MOCAR ou seja testar a funcionalidade
 	public List<Department> findAll(){
